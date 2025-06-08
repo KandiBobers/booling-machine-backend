@@ -27,10 +27,8 @@ export const generateCredentials = async (req: Request, res: Response): Promise<
 
         if (existingUser) {
             res.status(200).json({
-                message: 'User already exists',
-                username: existingUser.username,
+                login: existingUser.username,
                 password: existingUser.password,
-                user_id: existingUser.id
             });
             return;
         }
@@ -41,12 +39,8 @@ export const generateCredentials = async (req: Request, res: Response): Promise<
         const newUser = await userModel.createUser(username, telegram_id, password);
 
         res.status(201).json({
-            message: 'User created successfully',
-            credentials: {
-                username,
-                password, // Возвращаем plain text пароль только один раз!
-                user_id: newUser.id
-            }
+            login: username,
+            password: password,
         });
     } catch (error) {
         console.error('Error in generateCredentials:', error);
