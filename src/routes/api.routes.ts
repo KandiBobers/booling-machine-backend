@@ -11,6 +11,7 @@ router.get('/get-booked', bookingController.getUserBookings);
 router.post('/book', bookingController.bookRoom);
 router.delete('/remove', bookingController.removeBooking);
 router.put('/edit', bookingController.updateBooking);
+router.post('/login', userController.login)
 
 
 export default router;

@@ -7,7 +7,7 @@ export interface AuthenticatedRequest extends Request {
     user?: userModel.User;
 }
 
-const PUBLIC_PATHS = ['/get-credentials', '/login'];
+const PUBLIC_PATHS = ['/get-credentials'];
 
 export const authenticateUser = async (
     req: AuthenticatedRequest,

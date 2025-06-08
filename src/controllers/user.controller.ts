@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import * as userModel from '../models/user.model';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthenticatedRequest } from '../middleware/auth';
+import logger from "../utils/logger";
 
 const generatePassword = (length: number = 12): string => {
     const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -65,3 +66,9 @@ export const getCurrentUser = async (req: AuthenticatedRequest, res: Response): 
         telegram_id: req.user.telegram_id
     });
 };
+
+export const login = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    logger.info("Проводится логин")
+    res.status(200).json()
+    return
+}
