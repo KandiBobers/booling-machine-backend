@@ -15,7 +15,7 @@ app.use(morgan('combined', {
 }));
 
 // Подключение роутов с аутентификацией
-app.use('/api', authenticateUser, router); // Изменено
+app.use("", authenticateUser, router); // Изменено
 
 // Health check (без аутентификации)
 app.get('/health', (req, res) => {
