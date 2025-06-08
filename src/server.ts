@@ -6,10 +6,13 @@ import logger from './utils/logger';
 
 
 const PORT = process.env.PORT || 3000;
-
 async function startServer() {
+
+    logger.info('MODE:' + process.env.NODE_ENV);
     // Запуск миграций перед стартом сервера
-    await dbService.runMigrations();
+    if (process.env.NODE_ENV === 'development') {
+        await dbService.runMigrations();
+    }
     await initializeRooms();
     await createAdmin();
 

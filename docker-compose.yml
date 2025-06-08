@@ -1,23 +1,49 @@
 version: '3.8'
+
 services:
+  app:
+    build: .
+    container_name: booking_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=booking_db
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - PORT=3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - booking_network
+
   postgres:
     image: postgres:17.2-alpine
     container_name: booking_db
-    restart: always
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./src/migrations/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql  # Монтируем ваш скрипт
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: booking_db
+    ports:
+      - "5432:5432"
     healthcheck:
-      test: pg_isready -U postgres -d postgres
+      test: pg_isready -U postgres -d booking_db
       interval: 10s
       timeout: 5s
-      start_period: 10s
       retries: 5
+    networks:
+      - booking_network
 
 volumes:
   postgres_data:
+
+networks:
+  booking_network:
+    driver: bridge

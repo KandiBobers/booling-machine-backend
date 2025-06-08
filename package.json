@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "ts-node src/server.ts",
+    "dev": "cross-env NODE_ENV=development ts-node src/server.ts",
+    "start": "cross-env NODE_ENV=production node dist/server.js",
     "migrate": "ts-node src/services/db.service.ts"
   },
   "keywords": [],
@@ -25,6 +25,7 @@
     "@types/node": "^22.15.29",
     "@types/pg": "^8.15.4",
     "@types/uuid": "^10.0.0",
+    "cross-env": "^7.0.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
