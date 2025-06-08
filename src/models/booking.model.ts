@@ -49,11 +49,16 @@ export const deleteBooking = async (id: number) => {
     await pool.query('DELETE FROM bookings WHERE id = $1', [id]);
 };
 
-export const updateBookingDate = async (id: number, newDate: string) => {
+export const updateBookingDate = async (oldDate: String, newDate: string) => {
     await pool.query(
-        'UPDATE bookings SET date = $1 WHERE id = $2',
-        [newDate, id]
+        'UPDATE bookings SET date = $1 WHERE date = $2',
+        [newDate, oldDate]
     );
+};
+
+export const getBookingByDate = async (date: String): Promise<Booking | null> => {
+    const result = await pool.query('SELECT * FROM bookings WHERE date = $1', [date]);
+    return result.rows[0] || null;
 };
 
 export const getAllBokings = async () => {

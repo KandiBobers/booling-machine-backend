@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import bookingService from '../services/booking.service';
 import { AuthenticatedRequest } from '../middleware/auth';
 
 export const bookRoom = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const { room_id, date } = req.body;
+    const { room_id, date } = req.query;
     const userId = req.user?.id; // Берём ID из req.user
 
     if (!room_id || !date || !userId) {
@@ -38,7 +38,7 @@ export const getUserBookings = async (req: AuthenticatedRequest, res: Response):
 };
 
 export const removeBooking = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const { booking_id } = req.body;
+    const { booking_id } = req.query;
     const userId = req.user?.id; // Берём ID из req.user
 
     if (!booking_id || !userId) {
@@ -55,18 +55,18 @@ export const removeBooking = async (req: AuthenticatedRequest, res: Response): P
 };
 
 export const updateBooking = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const { booking_id, new_date } = req.body;
+    const { from_date, to_date } = req.query;
     const userId = req.user?.id;
 
-    if (!booking_id || !new_date || !userId) {
+    if (!from_date || !to_date || !userId) {
         res.status(400).json({ message: 'Missing parameters' });
         return;
     }
 
     const result = await bookingService.updateBooking(
-        parseInt(booking_id as string),
+        from_date as string,
         userId,
-        new_date as string
+        to_date as string
     );
 
     res.status(result.status).json({ message: result.message });

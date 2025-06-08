@@ -72,9 +72,9 @@ class BookingService {
         }
     }
 
-    async updateBooking(bookingId: number, userId: number, newDate: string) {
+    async updateBooking(fromDate: String, userId: number, toDate: string) {
         try {
-            const booking = await bookingModel.getBookingById(bookingId);
+            const booking = await bookingModel.getBookingByDate(fromDate);
             if (!booking) {
                 return { status: 404, message: 'Booking not found' };
             }
@@ -85,12 +85,12 @@ class BookingService {
                 return { status: 403, message: 'Forbidden' };
             }
 
-            const isAvailable = await bookingModel.isDateAvailable(booking.room_id, newDate);
+            const isAvailable = await bookingModel.isDateAvailable(booking.room_id, toDate);
             if (!isAvailable) {
                 return { status: 228, message: 'New date is already booked' };
             }
 
-            await bookingModel.updateBookingDate(bookingId, newDate);
+            await bookingModel.updateBookingDate(fromDate, toDate);
             return { status: 200, message: 'Booking updated successfully' };
         } catch (error) {
             logger.error('Error updating booking:', error);
