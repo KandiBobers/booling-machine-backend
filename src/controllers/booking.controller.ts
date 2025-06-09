@@ -30,7 +30,16 @@ export const getUserBookings = async (req: AuthenticatedRequest, res: Response):
 
     try {
         const bookings = await bookingService.getUserBookings(userId);
-        res.status(200).json(bookings);
+
+        // Преобразуем массив бронирований в нужный формат
+        const formattedBookings = bookings.map(booking => ({
+            id: booking.id, // ID комнаты или бронирования (уточните что вам нужно)
+            name: booking.room_name, // название комнаты
+            date: booking.date, // дата бронирования
+            photo_url: booking.photo_url // URL фото комнаты
+        }));
+
+        res.status(200).json(formattedBookings);
     } catch (error) {
         console.error('Error getting user bookings:', error);
         res.status(500).json({ message: 'Internal server error' });

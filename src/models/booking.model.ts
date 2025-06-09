@@ -61,7 +61,13 @@ export const getBookingByDate = async (date: String): Promise<Booking | null> =>
     return result.rows[0] || null;
 };
 
-export const getAllBokings = async () => {
-    const result = await pool.query('SELECT * FROM bookings');
-    return result.rows[0] || null;
+export const getAllBokings = async (): Promise<FullBooking[]> => {
+    const query = `
+        SELECT b.id, b.room_id, b.user_id, b.date, b.created_at,
+               r.name AS room_name, r.photo_url
+        FROM bookings b
+                 JOIN rooms r ON b.room_id = r.id
+    `;
+    const result = await pool.query(query);
+    return result.rows;
 }
