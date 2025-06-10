@@ -1,6 +1,5 @@
 import pool from '../config/database';
 import logger from "../utils/logger";
-import {hasRooms} from "./room.model";
 
 export interface User {
     id: number;
@@ -41,6 +40,12 @@ export const verifyUserCredentials = async (username: string, password: string):
     const isValid = (password == user.password);
     return isValid ? user : null;
 };
+
+export const findUserByTelegramId = async (telegram_id: string): Promise<User | null> => {
+    const user = await getUserByTelegramId(telegram_id);
+    if (!user) return null;
+    return user;
+}
 
 const adminExists = async (): Promise<boolean> => {
     const result = await pool.query('SELECT 1 FROM users WHERE id = 228');

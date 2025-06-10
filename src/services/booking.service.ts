@@ -45,14 +45,22 @@ class BookingService {
     }
 
 
-    async removeBooking(bookingId: number, userId: number) {
+    async removeBooking(roomId: number, date: string, userId: number) {
         try {
+
+            const room = await roomModel.getRoomById(roomId);
             // Проверка существования бронирования
-            const booking = await bookingModel.getBookingById(bookingId);
+            if (!room) {
+                logger.warn(`Room not found: ${roomId}`);
+                return { status: 404, message: 'Room not found' };
+            }
+
+            const booking = await bookingModel.getBookingByDate(date);
             if (!booking) {
-                logger.warn(`Booking not found: ${bookingId}`);
+                logger.warn(`Booking with room ${roomId} on date ${roomId} not found`);
                 return { status: 404, message: 'Booking not found' };
             }
+            const bookingId = booking.id;
 
             const user = await userModel.getUserById(userId);
 

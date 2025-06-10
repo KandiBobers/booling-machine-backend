@@ -3,16 +3,16 @@ import bookingService from '../services/booking.service';
 import { AuthenticatedRequest } from '../middleware/auth';
 
 export const bookRoom = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const { room_id, date } = req.query;
+    const { id, date } = req.query;
     const userId = req.user?.id; // Берём ID из req.user
 
-    if (!room_id || !date || !userId) {
+    if (!id || !date || !userId) {
         res.status(400).json({ message: 'Missing parameters' });
         return;
     }
 
     const result = await bookingService.bookRoom(
-        parseInt(room_id as string),
+        parseInt(id as string),
         date as string,
         userId
     );
@@ -47,16 +47,17 @@ export const getUserBookings = async (req: AuthenticatedRequest, res: Response):
 };
 
 export const removeBooking = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const { booking_id } = req.query;
+    const { id, date } = req.query;
     const userId = req.user?.id; // Берём ID из req.user
 
-    if (!booking_id || !userId) {
+    if (!id || !userId || !date) {
         res.status(400).json({ message: 'Missing parameters' });
         return;
     }
 
     const result = await bookingService.removeBooking(
-        parseInt(booking_id as string),
+        parseInt(id as string),
+        date as string,
         userId
     );
 
